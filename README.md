@@ -17,6 +17,8 @@ We recommend you use [dub](http://code.dlang.org) to add dlog to your project as
 dub add dlog
 ```
 
+[View on DUB](https://code.dlang.org/packages/dlog)
+
 ### Components
 
 dlog is formed out of two main components:
