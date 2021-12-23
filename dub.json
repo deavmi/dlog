@@ -1,0 +1,10 @@
+{
+	"authors": [
+		"Tristan B. Kildaire"
+	],
+	"copyright": "Copyright © 2021, Tristan B. Kildaire",
+	"description": "Simple and modular logging library",
+	"license": "LGPLv2",
+	"name": "dlog",
+	"targetType": "library",
+}
