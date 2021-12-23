@@ -84,7 +84,20 @@ Additional information, besides the text being logged itself (this is the `strin
 the contents of which are described below:
 
 1. `context[0]`
-TODO
+    * This contains `__FILE_FULL_PATH__` which is the full path (absolute) to the source file where `log()` was called
+2. `context[1]`
+    * This contains `__FILE__` which is the path (starting at `source/` to the source file where `log()` was called
+3. `context[2]`
+    * This contains a stringified version of `__LINE__` which is the line number of the call to `log()`
+4. `context[3]`
+    * This contains `__MODULE__` which is the name of the module the call to `log()` appeared in
+5. `context[4]`
+    * This contains `__FUNCTION__` which is the name of the function `log()` was called in
+6. `context[5]`
+    * This contains `__PRETTY_FUNCTION__` which is the same as above but with type information
+7. `context[5..X]`
+    * This contains optional extras that were set when the `log()` function was called with the `contextExtras` set
+    * Example: `log("Hello world", contextExtras=[this])`
 
 ## License
 
