@@ -106,7 +106,11 @@ public abstract class MessageTransform
 	/* Next transformation (if any) */
 	private MessageTransform chainedTransform;
 
-	/* Transformation (implement this) */
+	/**
+	* The actual textual transformation.
+	*
+	* This is to be implemented by sub-classes
+	*/
 	public abstract string transform(string text, string[] context);
 
 	/**
