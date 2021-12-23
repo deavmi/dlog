@@ -1,8 +1,7 @@
-module dlog.defaults;
-
 /**
 * Includes defaults such as the DefaultLogger
 */
+module dlog.defaults;
 
 import dlog.core : Logger;
 

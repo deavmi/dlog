@@ -1,10 +1,9 @@
-module dlog.core;
-
 /**
 * Core module containing types pertaining to the base Logger
 * class and base MessageTransform class (along with a default
 * transform, DefaultTransform)
 */
+module dlog.core;
 
 import std.conv : to;
 import dlog.defaults;
