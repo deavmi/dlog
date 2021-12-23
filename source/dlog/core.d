@@ -109,13 +109,17 @@ public abstract class MessageTransform
 	/* Transformation (implement this) */
 	public abstract string transform(string text, string[] context);
 
-	/* Chain a transform */
+	/**
+	* Chain a transform
+	*/
 	public final void chain(MessageTransform transform)
 	{
 		chainedTransform = transform;
 	}
 
-	/* Perform the transformation */
+	/**
+	* Perform the transformation
+	*/
 	public final string execute(string text, string[] context)
 	{
 		/* Perform the transformation */
