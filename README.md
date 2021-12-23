@@ -5,9 +5,7 @@ dlog
 
 **Simple and modular logging library**
 
-<center>
 `[2021-Dec-23 11:17:35.3527637]	(source/dlog/testing/thing.d:12): This is a log message`
-</center>
 
 ---
 
