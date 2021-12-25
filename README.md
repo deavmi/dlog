@@ -33,7 +33,7 @@ dlog is formed out of two main components:
 ### Quick start
 
 If you want to immediately begin logging text usin the defaults and don't care about implementing your own transformations then you can 
-simply use the defaulkt logger as follows:
+simply use the default logger as follows:
 
 ```d
 import dlog;
