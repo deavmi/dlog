@@ -61,6 +61,8 @@ for debugging.
 
 ### Custom loggers
 
+#### Implementing your own transform
+
 Perhaps the default transformation, `DefaultTransform`, may not be what you want. Maybe you want the module name included in the logged
 messages or perhaps don't want the date-and-timestamp included at all. All of this can be up to you if you choose to implement your own
 message transform.
@@ -76,7 +78,7 @@ public class CustomTranform : MessageTransform
 	{
 		string transformed;
 
-		
+		/* Insert code to transform `text` and return the `transformed` text */
 
 		return transformed;
 	}
@@ -101,6 +103,27 @@ the contents of which are described below:
 7. `context[5..X]`
     * This contains optional extras that were set when the `log()` function was called with the `contextExtras` set
     * Example: `log("Hello world", contextExtras=[this])`
+
+#### Creating a Logger
+
+We now need to create a logger that makes use of our message transform, we can do so by creating an instance
+of the `Logger` class and passing in our `MessageTransform` as so:
+
+```d
+Logger customLogger = new DefaultLogger(new CustomTranform());
+```
+
+The above is all one needs to be able to pull off a custom transformation.
+
+#### Custom Logger
+
+Custom loggers can also be created by sub-classing the `Logger` class and overriding the `logImpl(string)` method.
+The reason someone may want to do this is up to them. One easy to think of reason is to perhaps applying filtering
+of messages to be logged and skip them (as this method is where the I/O of printing out the logs normally happens).
+Another reason may be to log to a different data resource, the `DefaultLogger` writes to the file descriptor `0` (stdout),
+but you may want to log over a socket connection to a remote machine for example, or perhaps do several pieces of
+I/O for your logging. One can do that with a custom logger, you shoudl see `source/dlog/defaults.d` for the implementation
+of a custom logger, such as `DefaultLogger`.
 
 ## License
 
