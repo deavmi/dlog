@@ -8,6 +8,5 @@ nav:
     - Custom Loggers: custom_loggers.md
     - Custom Transforms: custom_transforms.md
 
-
 extra:
   logo: logo.png
