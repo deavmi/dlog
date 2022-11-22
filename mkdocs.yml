@@ -1,0 +1,13 @@
+site_name: dlog
+theme: alabaster
+
+nav:
+  - Home: index.md
+  - Quick Start: quick_start.md
+  - Customizations:
+    - Custom Loggers: custom_loggers.md
+    - Custom Transforms: custom_transforms.md
+
+
+extra:
+  logo: logo.png
