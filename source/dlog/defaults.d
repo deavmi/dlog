@@ -12,9 +12,10 @@ import dlog.core : Logger;
 */
 public final class DefaultLogger : Logger
 {
-	this()
+	this(string multiArgJoiner = " ")
 	{
 		/* Use the DefaultTransform */	
+		super(multiArgJoiner);
 	}
 
 	protected override void logImpl(string message)

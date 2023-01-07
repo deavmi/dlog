@@ -6,21 +6,26 @@
 module dlog.core;
 
 import std.conv : to;
+import std.range : join;
 import dlog.defaults;
 
 /**
-* DefaultTransform
-*
-* Provides a transformation of the kind
-*
-* [date+time] (srcFile:lineNumber): message `\n`
-*/
+ * DefaultTransform
+ *
+ * Provides a transformation of the kind
+ *
+ * [date+time] (srcFile:lineNumber): message `\n`
+ */
 public final class DefaultTransform : MessageTransform
 {
-
-	/**
-	* Our transformation
-	*/
+	/** 
+	 * Performs the default transformation
+	 *
+	 * Params:
+	 *   text = text input to transform
+	 *   context = the context (if any)
+	 * Returns: the transformed text
+	 */
 	public override string transform(string text, string[] context)
 	{
 		string message;
@@ -54,37 +59,51 @@ public class Logger
 	/* Starting transformation */
 	private MessageTransform messageTransform;
 	
+	/* The multiple argument joiner */
+	private string multiArgJoiner;
+
 	/**
 	* Constructs a new Logger with the default
 	* MessageTransform, see TODO (ref module)
 	*/
-	this()
+	this(string multiArgJoiner = " ")
 	{
-		this(new DefaultTransform());
+		this(new DefaultTransform(), multiArgJoiner);
 	}
 
 	/**
 	* Constructs a new Logger with the given
 	* MessageTransform
 	*/
-	this(MessageTransform messageTransform)
+	this(MessageTransform messageTransform, string multiArgJoiner = " ")
 	{
 		this.messageTransform = messageTransform;
+		this.multiArgJoiner = multiArgJoiner;
 	}
 
 	/**
 	* Log a message
 	*/
-	public final void log(TextType)(TextType message, string c1 = __FILE_FULL_PATH__,
+	public final void log(TextType...)(TextType message, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__, string[] contextExtras = null)
 	{
 		/* Construct context array */
 		string[] context = [c1, c2, to!(string)(c3), c4, c5, c6]~contextExtras;
+
+		/* Grab at compile-time all arguments and generate runtime code to add them to `components` */		
+		string[] components;
+		static foreach(messageComponent; message)
+		{
+			components ~= to!(string)(messageComponent);
+		}
+
+		/* Join all `components` into a single string */
+		string messageOut = join(components, multiArgJoiner);
 		
 		/* Apply the transformation on the message */
-		string transformedMesage = messageTransform.execute(to!(string)(message), context);
+		string transformedMesage = messageTransform.execute(messageOut, context);
 		
 		/* Call the underlying logger implementation */
 		logImpl(transformedMesage);
@@ -157,5 +176,16 @@ unittest
 	logger.log(true);
 	logger.log([1,2,3]);
 	logger.log('f');
+	logger.log("Bruh");
 	logger.log(logger);
+}
+
+unittest
+{
+	Logger logger = new DefaultLogger();
+
+	logger.log(1, 1.1, true, [1,2,3], 'f', "Bruh", logger);
+
+	logger = new DefaultLogger("(-)");
+	logger.log(1, 1.1, true, [1,2,3], 'f', "Bruh", logger);
 }
