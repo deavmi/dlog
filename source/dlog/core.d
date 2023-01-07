@@ -170,22 +170,20 @@ unittest
 {
 	Logger logger = new DefaultLogger();
 
-	logger.log("This is a log message");
-	logger.log(1);
-	logger.log(1.1);
-	logger.log(true);
-	logger.log([1,2,3]);
-	logger.log('f');
-	logger.log("Bruh");
-	logger.log(logger);
-}
+	import std.meta;
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
 
-unittest
-{
-	Logger logger = new DefaultLogger();
+	
+	// Test various types one-by-one
+	static foreach(testParameter; testParameters)
+	{
+		logger.log(testParameter);
+	}
 
-	logger.log(1, 1.1, true, [1,2,3], 'f', "Bruh", logger);
+	// Test various parameters (of various types) all at once
+	logger.log(testParameters);
 
+	// Same as above but with a custom joiner set
 	logger = new DefaultLogger("(-)");
-	logger.log(1, 1.1, true, [1,2,3], 'f', "Bruh", logger);
+	logger.log(testParameters);
 }
