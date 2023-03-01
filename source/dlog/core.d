@@ -9,6 +9,7 @@ import std.conv : to;
 import std.range : join;
 import dlog.transform : MessageTransform;
 import dlog.defaults;
+import dlog.context : Context, CompilationInfo;
 
 /**
 * Logger
@@ -42,9 +43,8 @@ public class Logger
 		this.multiArgJoiner = multiArgJoiner;
 	}
 
-	import dlog.context : Context, CompilationInfo;
-	
-	public final void log2(TextType...)(TextType message, Context context = new Context(), CompilationInfo compilationInfo = CompilationInfo(
+	// TODO: Working on this
+	public final void log2(TextType...)(TextType message, CompilationInfo compilationInfo = CompilationInfo(
 																																			__FILE_FULL_PATH__,
 																																			__FILE__,
 																																			__LINE__,
@@ -52,6 +52,30 @@ public class Logger
 																																			__FUNCTION__,
 																																			__PRETTY_FUNCTION__))
 	{
+		// Create default context
+		Context context = new Context();
+
+		// TODO: DO the same sort of grab for the CompilationInfo
+		static foreach(messageComponent; message)
+		{
+			static if(__traits(isSame, typeof(messageComponent), mixin(`CompilationInfo`)))
+			{
+				compilationInfo = messageComponent;
+				pragma(msg, "meta: log2 has a custom compilationInfo passed in");
+			}
+			else static if(__traits(isSame, typeof(messageComponent), mixin(`Context`)))
+			{
+				context = messageComponent;
+				pragma(msg, "meta: generated a log2 with a CUSTOM context");
+			}
+		}
+
+		// TODO: Gabd the context from the message[$] if it is of type Context (meta)
+		
+		
+		
+
+
 		/* Set the line information in the provided Context */
 		context.setLineInfo(compilationInfo);
 
@@ -145,6 +169,7 @@ unittest
 
 /**
 * Tests the `log2()` method using the DefaultLogger
+* and no custom Context
 */
 unittest
 {
@@ -161,6 +186,73 @@ unittest
 	// Same as above but with a custom joiner set
 	logger = new DefaultLogger("(-)");
 	logger.log2(testParameters);
+	
+	writeln();
+}
+
+/**
+* Tests the `log2()` method using the DefaultLogger
+* and using a custom Context
+*/
+unittest
+{
+	writeln();
+	writeln();
+
+	Logger logger = new DefaultLogger();
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+	// Test various parameters (of various types) all at once
+	logger.log2(testParameters);
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+	logger.log2(testParameters, new Context());
+	
+	writeln();
+}
+
+/**
+* Tests the `log2()` method using the DefaultLogger
+* and using a custom CompilationInfo
+*/
+unittest
+{
+	writeln();
+	writeln();
+
+	Logger logger = new DefaultLogger();
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+	// Test various parameters (of various types) all at once
+	logger.log2(testParameters);
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+	logger.log2(testParameters, CompilationInfo(__FILE_FULL_PATH__, __FILE__, __LINE__, __MODULE__, __FUNCTION__, __PRETTY_FUNCTION__));
+	
+	writeln();
+}
+
+/**
+* Tests the `log2()` method using the DefaultLogger
+* and using a custom CompilationInfo and custom context
+*/
+unittest
+{
+	writeln();
+	writeln();
+
+	Logger logger = new DefaultLogger();
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+	logger.log2(testParameters, new Context(), CompilationInfo(__FILE_FULL_PATH__, __FILE__, __LINE__, __MODULE__, __FUNCTION__, __PRETTY_FUNCTION__));
 	
 	writeln();
 }
