@@ -104,14 +104,15 @@ public class Logger
 	{
 		/* Default context extras ios nothing */
 		string[] contextExtras = null;
-		version(unittest)
+		static if(__traits(isSame, typeof(message[$-1]), mixin(`string[]`)))
 		{
-			static if(__traits(isSame, typeof(message[$-1]), mixin(`string[]`)))
+			contextExtras = message[$-1];
+			version(unittest)
 			{
-				contextExtras = message[$-1];
 				pragma(msg, "meta: log: Found a custom string[] context array");
 			}
 		}
+		
 
 		/* Construct context array */
 		string[] context = [c1, c2, to!(string)(c3), c4, c5, c6]~contextExtras;
