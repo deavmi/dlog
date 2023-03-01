@@ -1,5 +1,7 @@
 module dlog.context;
 
+import std.conv : to;
+
 /** 
  * Context that is passed in with the call to log
  */
@@ -28,12 +30,12 @@ public class Context
  */
 public struct CompilationInfo
 {
-    private string fullFilePath;
-    private string file;
-    private ulong line;
-    private string moduleName;
-    private string functionName;
-    private string prettyFunctionName;
+    public string fullFilePath;
+    public string file;
+    public ulong line;
+    public string moduleName;
+    public string functionName;
+    public string prettyFunctionName;
 
     this(string fullFilePath, string file, ulong line, string moduleName, string functionName, string prettyFunctionName)
     {
@@ -44,5 +46,11 @@ public struct CompilationInfo
         this.functionName = functionName;
         this.prettyFunctionName = prettyFunctionName;
     }
+
+    public string[] toArray()
+    {
+        return [fullFilePath, file, to!(string)(line), moduleName, functionName, prettyFunctionName];
+    }
+
 }
 

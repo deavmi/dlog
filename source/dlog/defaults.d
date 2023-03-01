@@ -5,6 +5,8 @@ module dlog.defaults;
 
 import dlog.core : Logger;
 import dlog.transform : MessageTransform;
+import dlog.context : Context, CompilationInfo;
+import std.conv : to;
 
 /**
 * DefaultLogger
@@ -43,8 +45,11 @@ public final class DefaultTransform : MessageTransform
 	 *   context = the context (if any)
 	 * Returns: the transformed text
 	 */
-	public override string transform(string text, string[] context)
+	public override string transform(string text, Context ctx)
 	{
+		/* Extract the context */
+		string[] context = ctx.getLineInfo().toArray();
+
 		string message;
 
 		/* Date and time */

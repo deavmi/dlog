@@ -1,5 +1,7 @@
 module dlog.transform;
 
+import dlog.context : Context;
+
 /**
 * MessageTransform
 *
@@ -13,12 +15,12 @@ public abstract class MessageTransform
 	/* Next transformation (if any) */
 	private MessageTransform chainedTransform;
 
-	/**
+    /**
 	* The actual textual transformation.
 	*
 	* This is to be implemented by sub-classes
 	*/
-	public abstract string transform(string text, string[] context);
+	public abstract string transform(string text, Context context);
 
 	/**
 	* Chain a transform
@@ -31,7 +33,7 @@ public abstract class MessageTransform
 	/**
 	* Perform the transformation
 	*/
-	public final string execute(string text, string[] context)
+	public final string execute(string text, Context context)
 	{
 		/* Perform the transformation */
 		string transformedText = transform(text, context);
