@@ -100,8 +100,19 @@ public class Logger
 	public final void log(TextType...)(TextType message, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
-									string c6 = __PRETTY_FUNCTION__, string[] contextExtras = null)
+									string c6 = __PRETTY_FUNCTION__)
 	{
+		/* Default context extras ios nothing */
+		string[] contextExtras = null;
+		version(unittest)
+		{
+			static if(__traits(isSame, typeof(message[$-1]), mixin(`string[]`)))
+			{
+				contextExtras = message[$-1];
+				pragma(msg, "meta: log: Found a custom string[] context array");
+			}
+		}
+
 		/* Construct context array */
 		string[] context = [c1, c2, to!(string)(c3), c4, c5, c6]~contextExtras;
 
@@ -166,6 +177,34 @@ unittest
 	writeln();
 }
 
+/**
+* Tests the DefaultLogger but custom `log()` context
+*/
+unittest
+{
+	writeln();
+	writeln();
+
+	Logger logger = new DefaultLogger();
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+	
+	// Test various types one-by-one
+	static foreach(testParameter; testParameters)
+	{
+		logger.log(testParameter, ["cool context"]);
+	}
+
+	// Test various parameters (of various types) all at once
+	logger.log(testParameters, ["cool context"]);
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+	logger.log(testParameters, ["cool context"]);
+
+	writeln();
+}
 
 /**
 * Tests the `log2()` method using the DefaultLogger
