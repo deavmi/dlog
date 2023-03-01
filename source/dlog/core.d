@@ -42,6 +42,34 @@ public class Logger
 		this.multiArgJoiner = multiArgJoiner;
 	}
 
+	import dlog.context : Context, CompilationInfo;
+	
+	public final void log2(TextType...)(TextType message, Context context = new Context(), CompilationInfo compilationInfo = CompilationInfo(
+																																			__FILE_FULL_PATH__,
+																																			__FILE__,
+																																			__LINE__,
+																																			__MODULE__,
+																																			__FUNCTION__,
+																																			__PRETTY_FUNCTION__))
+	{
+		/* Set the line information in the provided Context */
+		context.setLineInfo(compilationInfo);
+
+		/* Grab at compile-time all arguments and generate runtime code to add them to `components` */		
+		string[] components;
+		static foreach(messageComponent; message)
+		{
+			components ~= to!(string)(messageComponent);
+		}
+
+		/* Join all `components` into a single string */
+		string messageOut = join(components, multiArgJoiner);
+
+		// pragma(msg, styff);
+
+		// TODO: Implement suff here
+	}
+
 	/**
 	* Log a message
 	*/
@@ -79,15 +107,22 @@ public class Logger
 }
 
 
+version(unittest)
+{
+	import std.meta : AliasSeq;
+	import std.stdio : writeln;
+}
 
 /**
 * Tests the DefaultLogger
 */
 unittest
 {
+	writeln();
+	writeln();
+
 	Logger logger = new DefaultLogger();
 
-	import std.meta;
 	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
 
 	
@@ -103,4 +138,29 @@ unittest
 	// Same as above but with a custom joiner set
 	logger = new DefaultLogger("(-)");
 	logger.log(testParameters);
+
+	writeln();
+}
+
+
+/**
+* Tests the `log2()` method using the DefaultLogger
+*/
+unittest
+{
+	writeln();
+	writeln();
+
+	Logger logger = new DefaultLogger();
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+	// Test various parameters (of various types) all at once
+	logger.log2(testParameters);
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+	logger.log2(testParameters);
+	
+	writeln();
 }
