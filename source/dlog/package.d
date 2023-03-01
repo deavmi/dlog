@@ -8,3 +8,4 @@ module dlog;
 public import dlog.core;
 public import dlog.transform;
 public import dlog.defaults;
+public import dlog.context;
