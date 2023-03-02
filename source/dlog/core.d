@@ -10,6 +10,7 @@ import std.range : join;
 import dlog.transform : MessageTransform;
 import dlog.defaults;
 import dlog.context : Context, CompilationInfo;
+import dlog.utilities : flatten;
 
 /**
 * Logger
@@ -41,32 +42,6 @@ public class Logger
 	{
 		this.messageTransform = messageTransform;
 		this.multiArgJoiner = multiArgJoiner;
-	}
-
-
-	
-
-
-	/** 
-	 * Given an arbitrary amount of arguments, convert each to a string
-	 * and return that as an array
-	 *
-	 * Params:
-	 *   segments = alias sequence
-	 * Returns: a flattened string[]
-	 */
-	public static string[] flatten(TextType...)(TextType segments)
-	{
-		/* The flattened components */
-		string[] components;
-
-		/* Flatten the components */
-		static foreach(messageComponent; segments)
-		{
-			components ~= to!(string)(messageComponent);
-		}
-
-		return components;
 	}
 
 	/** 
