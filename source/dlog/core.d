@@ -58,9 +58,43 @@ public class Logger
 		logger.log3Ctx(ctx, testParameters);
 	}
 
-	import dlog.context;
 
-	public final void log3(TextType...)(TextType segments, string c1 = __FILE_FULL_PATH__,
+	/** 
+	 * Given an arbitrary amount of arguments, convert each to a string
+	 * and return that as an array
+	 *
+	 * Params:
+	 *   segments = alias sequence
+	 * Returns: a flattened string[]
+	 */
+	public static string[] flatten(TextType...)(TextType segments)
+	{
+		/* The flattened components */
+		string[] components;
+
+		/* Flatten the components */
+		static foreach(messageComponent; segments)
+		{
+			components ~= to!(string)(messageComponent);
+		}
+
+		return components;
+	}
+
+	
+	/** 
+	 * Logs the given string using the default context
+	 *
+	 * Params:
+	 *   text = the string to log
+	 *   __FILE_FULL_PATH__ = compile time usage file
+	 *   __FILE__ = compile time usage file (relative)
+	 *   __LINE__ = compile time usage line number
+	 *   __MODULE__ = compile time usage module
+	 *   __FUNCTION__ = compile time usage function
+	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
+	 */
+	public final void log3(string text, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__)
@@ -75,12 +109,55 @@ public class Logger
 		defaultContext.setLineInfo(compilationInfo);
 
 		/* Call the log */
-		log3Ctx(defaultContext, segments);
+		log3Ctx(defaultContext, text, c1, c2, c3, c4, c5, c6);
 	}
 
+	/** 
+	 * Logs using the default context an arbitrary amount of arguments
+	 *
+	 * Params:
+	 *   segments = the arbitrary argumnets (alias sequence)
+	 *   __FILE_FULL_PATH__ = compile time usage file
+	 *   __FILE__ = compile time usage file (relative)
+	 *   __LINE__ = compile time usage line number
+	 *   __MODULE__ = compile time usage module
+	 *   __FUNCTION__ = compile time usage function
+	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
+	 */
+	public final void log3(TextType...)(TextType segments, string c1 = __FILE_FULL_PATH__,
+									string c2 = __FILE__, ulong c3 = __LINE__,
+									string c4 = __MODULE__, string c5 = __FUNCTION__,
+									string c6 = __PRETTY_FUNCTION__)
+	{
+		/**
+		 * Grab at compile-time all arguments and generate runtime code to add them to `components`
+		 *
+		 * The reason for taking n-1 is because the last argument is the context pointer (i.e. `this`)
+		 * seeing how instance methods work.
+		 */		
+		string[] components = flatten(segments)[0..$-1];
+
+		/* Join all `components` into a single string */
+		string messageOut = join(components, multiArgJoiner);
+
+		/* Call the log (with text and default context) */
+		log3(messageOut, c1, c2, c3, c4, c5, c6);
+	}
 	
-	
-	public final void log3Ctx(Context, TextType...)(Context context, TextType segments, string c1 = __FILE_FULL_PATH__,
+	/** 
+	 * Logs the given string using the provided context
+	 *
+	 * Params:
+	 *	 context = the custom context to use
+	 *   text = the string to log
+	 *   __FILE_FULL_PATH__ = compile time usage file
+	 *   __FILE__ = compile time usage file (relative)
+	 *   __LINE__ = compile time usage line number
+	 *   __MODULE__ = compile time usage module
+	 *   __FUNCTION__ = compile time usage function
+	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
+	 */
+	public final void log3Ctx(Context context, string text, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__)
@@ -90,76 +167,25 @@ public class Logger
 
 		/* Set the line information in the context */
 		context.setLineInfo(compilationInfo);
-		
-		/* Grab at compile-time all arguments and generate runtime code to add them to `components` */		
-		string[] components;
-		static foreach(messageComponent; segments)
-		{
-			components ~= to!(string)(messageComponent);
-		}
-
-		/* Join all `components` into a single string */
-		string messageOut = join(components, multiArgJoiner);
 
 		/* Apply the transformation on the message */
-		string transformedMesage = messageTransform.execute(messageOut, context);
+		string transformedMesage = messageTransform.execute(text, context);
 		
 		/* Call the underlying logger implementation */
 		logImpl(transformedMesage);
 	}
 
-	alias log = log3;
-	alias logc = log3Ctx;
-
-	// /**
-	// * Log a message (default context))
-	// */
-	// public final void log(TextType...)(TextType message, string c1 = __FILE_FULL_PATH__,
-	// 								string c2 = __FILE__, ulong c3 = __LINE__,
-	// 								string c4 = __MODULE__, string c5 = __FUNCTION__,
-	// 								string c6 = __PRETTY_FUNCTION__)
-	// {
-	// 	/* Default context extras is nothing */
-	// 	string[] defaultContext = null;
-		
-	// 	/* Call the log */
-	// 	logCtx(defaultContext, message);
-	// }
-
-	// /**
-	// * Log a message
-	// */
-	// public final void logCtx(string[] ctx, TextType...)(string[] contextExtras, TextType message, string c1 = __FILE_FULL_PATH__,
-	// 								string c2 = __FILE__, ulong c3 = __LINE__,
-	// 								string c4 = __MODULE__, string c5 = __FUNCTION__,
-	// 								string c6 = __PRETTY_FUNCTION__)
-	// {
-	// 	/* Construct context array */
-	// 	string[] context = [c1, c2, to!(string)(c3), c4, c5, c6]~contextExtras;
-
-	// 	/* Grab at compile-time all arguments and generate runtime code to add them to `components` */		
-	// 	string[] components;
-	// 	int metaLen = message[].length;
-	// 	static foreach(messageComponent; message)
-	// 	{
-	// 		components ~= to!(string)(messageComponent);
-	// 	}
-
-	// 	/* Join all `components` into a single string */
-	// 	string messageOut = join(components, multiArgJoiner);
-		
-	// 	/* Apply the transformation on the message */
-	// 	string transformedMesage = messageTransform.execute(messageOut, context);
-		
-	// 	/* Call the underlying logger implementation */
-	// 	logImpl(transformedMesage);
-	// }
-
-	/**
-	* Logging implementation, this is where the fina
-	* transformed text will be transferred to and finally
-	* logged
-	*/
+	public alias log = log3;
+	public alias logc = log3Ctx;
+	
+	/** 
+	 * Logging implementation, this is where the final
+	 * transformed text will be transferred to and finally
+	 * logged
+	 *
+	 * Params:
+	 *   message = the message to log
+	 */
 	protected abstract void logImpl(string message);
 }
 

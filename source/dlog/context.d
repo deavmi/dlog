@@ -2,12 +2,22 @@ module dlog.context;
 
 import std.conv : to;
 
+
+public enum Level
+{
+    INFO,
+    WARN,
+    ERROR,
+    DEBUG
+}
+
 /** 
  * Context that is passed in with the call to log
  */
 public class Context
 {
     private CompilationInfo lineInfo;
+    private Level level;
 
     this()
     {
