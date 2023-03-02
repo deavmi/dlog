@@ -23,7 +23,7 @@ public class Logger
 	private MessageTransform messageTransform;
 	
 	/* The multiple argument joiner */
-	private string multiArgJoiner;
+	protected string multiArgJoiner;
 
 	/** 
 	 * Constructs a new Logger with the default
