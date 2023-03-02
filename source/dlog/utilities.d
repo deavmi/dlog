@@ -1,5 +1,7 @@
 module dlog.utilities;
 
+import std.conv : to;
+
 /** 
  * Given an arbitrary amount of arguments, convert each to a string
  * and return that as an array
