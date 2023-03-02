@@ -331,6 +331,9 @@ public class Logger
 		/* Call the log */
 		logc(defaultContext, messageOut, c1, c2, c3, c4, c5, c6);
 	}
+
+	/* You can also call using `dbg` */
+	public alias dbg = debug_;
 	
 	/** 
 	 * Logging implementation, this is where the final
