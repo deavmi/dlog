@@ -57,6 +57,18 @@ public struct CompilationInfo
     public string functionName;
     public string prettyFunctionName;
 
+    /** 
+     * Constructs the compilation information with the provided
+     * parameters
+     *
+     * Params:
+     *   __FILE_FULL_PATH__ = compile time usage file
+	 *   __FILE__ = compile time usage file (relative)
+	 *   __LINE__ = compile time usage line number
+	 *   __MODULE__ = compile time usage module
+	 *   __FUNCTION__ = compile time usage function
+	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
+     */
     this(string fullFilePath, string file, ulong line, string moduleName, string functionName, string prettyFunctionName)
     {
         this.fullFilePath = fullFilePath;
@@ -67,10 +79,13 @@ public struct CompilationInfo
         this.prettyFunctionName = prettyFunctionName;
     }
 
+    /** 
+     * Flattens the known compile-time information into a string array
+     *
+     * Returns: a string[]
+     */
     public string[] toArray()
     {
         return [fullFilePath, file, to!(string)(line), moduleName, functionName, prettyFunctionName];
     }
-
 }
-
