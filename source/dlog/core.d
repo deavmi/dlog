@@ -44,19 +44,7 @@ public class Logger
 	}
 
 
-	unittest
-	{
-		Logger logger = new DefaultLogger();
-
-		alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-
-		// Same as above but with a custom joiner set
-		logger = new DefaultLogger(" ");
-		logger.log3(testParameters);
-		Context ctx = new Context();
-		logger.log3Ctx(ctx, testParameters);
-	}
+	
 
 
 	/** 
@@ -79,6 +67,25 @@ public class Logger
 		}
 
 		return components;
+	}
+
+	/** 
+	 * Given an arbitrary amount of arguments, convert each to a string
+	 * and return it as an array joined by the joiner
+	 *
+	 * Params:
+	 *   segments = alias sequence
+	 * Returns: a string of the argumnets
+	 */
+	public string args(TextType...)(TextType segments)
+	{
+		/* The flattened components */
+		string[] components = flatten(segments);
+
+		/* Join all `components` into a single string */
+		string joined = join(components, multiArgJoiner);
+
+		return joined;
 	}
 
 	
@@ -131,11 +138,8 @@ public class Logger
 	{
 		/**
 		 * Grab at compile-time all arguments and generate runtime code to add them to `components`
-		 *
-		 * The reason for taking n-1 is because the last argument is the context pointer (i.e. `this`)
-		 * seeing how instance methods work.
 		 */		
-		string[] components = flatten(segments)[0..$-1];
+		string[] components = flatten(segments);
 
 		/* Join all `components` into a single string */
 		string messageOut = join(components, multiArgJoiner);
@@ -201,9 +205,6 @@ version(unittest)
 */
 unittest
 {
-	writeln();
-	writeln();
-
 	Logger logger = new DefaultLogger();
 
 	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
@@ -226,156 +227,34 @@ unittest
 }
 
 /**
-* Tests the DefaultLogger but custom `log()` context
-*/
-unittest
-{
-	writeln();
-	writeln();
-
-	// Logger logger = new DefaultLogger();
-
-	// alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-	
-	// // Test various types one-by-one
-	// static foreach(testParameter; testParameters)
-	// {
-	// 	logger.log(["cool context"], testParameter);
-	// }
-
-	// // Test various parameters (of various types) all at once
-	// logger.log(["cool context"], testParameters);
-
-	// // Same as above but with a custom joiner set
-	// logger = new DefaultLogger("(-)");
-	// logger.log(["cool context"], testParameters);
-
-	// writeln();
-}
-
-/**
-* Tests the `log2()` method using the DefaultLogger
-* and no custom Context
-*/
-unittest
-{
-	writeln();
-	writeln();
-
-	Logger logger = new DefaultLogger();
-
-	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-	// Test various parameters (of various types) all at once
-	// logger.log2(testParameters);
-
-	// // Same as above but with a custom joiner set
-	// logger = new DefaultLogger("(-)");
-	// logger.log2(testParameters);
-	
-	// writeln();
-}
-
-/**
-* Tests the `log2()` method using the DefaultLogger
-* and using a custom Context
-*/
-unittest
-{
-	writeln();
-	writeln();
-
-	Logger logger = new DefaultLogger();
-
-	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-	// Test various parameters (of various types) all at once
-	// logger.log2(testParameters);
-
-	// // Same as above but with a custom joiner set
-	// logger = new DefaultLogger("(-)");
-	// logger.log2(testParameters, new Context());
-	
-	// writeln();
-}
-
-/**
-* Tests the `log2()` method using the DefaultLogger
-* and using a custom CompilationInfo
-*/
-unittest
-{
-	writeln();
-	writeln();
-
-	Logger logger = new DefaultLogger();
-
-	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-	// Test various parameters (of various types) all at once
-	// logger.log2(testParameters);
-
-	// // Same as above but with a custom joiner set
-	// logger = new DefaultLogger("(-)");
-	// logger.log2(testParameters, CompilationInfo(__FILE_FULL_PATH__, __FILE__, __LINE__, __MODULE__, __FUNCTION__, __PRETTY_FUNCTION__));
-	
-	// writeln();
-}
-
-/**
-* Tests the `log2()` method using the DefaultLogger
-* and using a custom CompilationInfo and custom context
-*/
-unittest
-{
-	writeln();
-	writeln();
-
-	Logger logger = new DefaultLogger();
-
-	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
-
-
-	// Same as above but with a custom joiner set
-	logger = new DefaultLogger("(-)");
-	// logger.log2(testParameters, new Context(), CompilationInfo(__FILE_FULL_PATH__, __FILE__, __LINE__, __MODULE__, __FUNCTION__, __PRETTY_FUNCTION__));
-	
-	writeln();
-}
-
-/**
- * Printing out some arrays, also using a DEFAULT context 
+ * Printing out some mixed data-types, also using a DEFAULT context 
  */
 unittest
 {
 	Logger logger = new DefaultLogger();
 
-	// Same as above but with a custom joiner set
+	// Create a default logger with the default joiner
 	logger = new DefaultLogger();
 	logger.log(["a", "b", "c", "d"], [1, 2], true);
 
 	writeln();
-	writeln();
 }
 
 /**
- * Printing out some arrays, also using a CUSTOM context 
+ * Printing out some mixed data-types, also using a CUSTOM context 
  */
 unittest
 {
 	Logger logger = new DefaultLogger();
 
-	// Same as above but with a custom joiner set
-	logger = new DefaultLogger(" ");
+	// Create a default logger with the default joiner
+	logger = new DefaultLogger();
 
-	// Create a noticeable custom context
-	// TODO: Actually make this somewhat noticeable
+	// Create c custom context
 	Context customContext = new Context();
 
 	// Log with the custom context
-	logger.logc(customContext, ["an", "array"], 1, "hello", true);
+	logger.logc(customContext, logger.args(["an", "array"], 1, "hello", true));
 
-	writeln();
 	writeln();
 }
