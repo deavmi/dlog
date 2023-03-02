@@ -33,6 +33,16 @@ public class Context
     {
         return lineInfo;
     }
+
+    public final Level getLevel()
+    {
+        return level;
+    }
+
+    public final void setLevel(Level level)
+    {
+        this.level = level;
+    }
 }
 
 /**
