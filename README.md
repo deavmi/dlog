@@ -1,9 +1,18 @@
-![](branding/logo.png)
+<p align="center">
+<img src="branding/logo.png" width=220>
+</p>
 
-dlog
-====
+<br>
 
-**Simple and modular logging library**
+<h1 align="center">dlog</h1>
+
+<h3 align="center"><i><b>Simple and modular logging library</i></b></h3>
+
+---
+
+<br>
+<br
+
 
 `[2021-Dec-23 11:17:35.3527637]	(source/dlog/testing/thing.d:12): This is a log message`
 
