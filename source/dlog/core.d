@@ -76,7 +76,7 @@ public class Logger
 	 *   __FUNCTION__ = compile time usage function
 	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
 	 */
-	public final void log3(string text, string c1 = __FILE_FULL_PATH__,
+	public final void log(string text, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__)
@@ -91,7 +91,7 @@ public class Logger
 		defaultContext.setLineInfo(compilationInfo);
 
 		/* Call the log */
-		log3Ctx(defaultContext, text, c1, c2, c3, c4, c5, c6);
+		logc(defaultContext, text, c1, c2, c3, c4, c5, c6);
 	}
 
 	/** 
@@ -106,7 +106,7 @@ public class Logger
 	 *   __FUNCTION__ = compile time usage function
 	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
 	 */
-	public final void log3(TextType...)(TextType segments, string c1 = __FILE_FULL_PATH__,
+	public final void log(TextType...)(TextType segments, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__)
@@ -120,7 +120,7 @@ public class Logger
 		string messageOut = join(components, multiArgJoiner);
 
 		/* Call the log (with text and default context) */
-		log3(messageOut, c1, c2, c3, c4, c5, c6);
+		log(messageOut, c1, c2, c3, c4, c5, c6);
 	}
 	
 	/** 
@@ -136,7 +136,7 @@ public class Logger
 	 *   __FUNCTION__ = compile time usage function
 	 *   __PRETTY_FUNCTION__ = compile time usage function (pretty)
 	 */
-	public final void log3Ctx(Context context, string text, string c1 = __FILE_FULL_PATH__,
+	public final void logc(Context context, string text, string c1 = __FILE_FULL_PATH__,
 									string c2 = __FILE__, ulong c3 = __LINE__,
 									string c4 = __MODULE__, string c5 = __FUNCTION__,
 									string c6 = __PRETTY_FUNCTION__)
@@ -154,8 +154,7 @@ public class Logger
 		logImpl(transformedMesage);
 	}
 
-	public alias log = log3;
-	public alias logc = log3Ctx;
+	
 	
 	/** 
 	 * Logging implementation, this is where the final
