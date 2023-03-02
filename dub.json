@@ -1,10 +1,11 @@
 {
+	"homepage": "https://deavmi.assigned.network/projects/dlog",
 	"authors": [
-		"Tristan B. Kildaire"
+		"Tristan B. Velloza Kildaire"
 	],
-	"copyright": "Copyright © 2021, Tristan B. Kildaire",
+	"copyright": "Copyright © 2023, Tristan B. Kildaire",
 	"description": "Simple and modular logging library",
-	"license": "LGPLv2",
+	"license": "LGPL 3.0",
 	"name": "dlog",
-	"targetType": "library",
+	"targetType": "library"
 }

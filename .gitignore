@@ -2,3 +2,4 @@
 *test-library*
 *.lst
 libdlog.a
+dub.selections.json
