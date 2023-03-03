@@ -1,11 +1,24 @@
 /**
-* Package definition module
-*
-* Import this to use dlog
+* DLog logging facilities
 */
 module dlog;
 
+/**
+* Core logging services
+*/
 public import dlog.core;
+
+/**
+* Transformations
+*/
 public import dlog.transform;
-public import dlog.defaults;
+
+/**
+* Context for logging
+*/
 public import dlog.context;
+
+/**
+* Default logger
+*/
+public import dlog.defaults;
