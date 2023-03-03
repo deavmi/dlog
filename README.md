@@ -42,7 +42,7 @@ dlog is formed out of two main components:
 ### Quick start
 
 If you want to immediately begin logging text usin the defaults and don't care about implementing your own transformations then you can 
-simply use the defaulkt logger as follows:
+simply use the default logger as follows:
 
 ```d
 import dlog;
@@ -68,6 +68,40 @@ This will output the following:
 As you can see file and line numbering of where the `log()` function is called appears in the log message which can be quite helpful
 for debugging.
 
+---
+
+We also support many different logging levels which can be accomplished using the `error`, `debug_` (or the `dbg` alias), `info `(the default) and `warn`:
+
+```d
+Logger logger = new DefaultLogger();
+
+// Create a default logger with the default joiner
+logger = new DefaultLogger();
+
+// Test out `error()`
+logger.error(["woah", "LEVELS!"], 69.420);
+
+// Test out `info()`
+logger.info(["woah", "LEVELS!"], 69.420);
+
+// Test out `warn()`
+logger.warn(["woah", "LEVELS!"], 69.420);
+
+// Test out `debug_()`
+logger.debug_(["woah", "LEVELS!"], 69.420);
+```
+
+This outputs the following:
+
+```
+[2023-Mar-03 11:33:49.2617904]	(source/dlog/core.d:427): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618091]	(source/dlog/core.d:430): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618273]	(source/dlog/core.d:433): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618457]	(source/dlog/core.d:436): ["woah", "LEVELS!"] 69.42
+```
+
+You can also look into `logc(Context, string)` which allows you to use a `Context` object when logging, more information available in the [full API](https://dlog.dpldocs.info/dlog.context.html).
+
 ### Custom loggers
 
 #### Implementing your own transform
@@ -83,7 +117,7 @@ import dlog;
 
 public class CustomTranform : MessageTransform
 {
-	public override string transform(string text, string[] context)
+	public override string transform(string text, Context context)
 	{
 		string transformed;
 
@@ -94,26 +128,26 @@ public class CustomTranform : MessageTransform
 }
 ```
 
-Additional information, besides the text being logged itself (this is the `string text` argument), comes in the form of a string array as `string[] context`
-the contents of which are described below:
+Additional information, besides the text being logged itself (this is the `string text` argument), comes in the form of a `Context` object `context`. What one can get from this is a `CompilationInfo` struct which contains the following fields below if one calls `toArray()` on
+it which will return a string array shown below (we refer to this array as `lineInfo`):
 
-1. `context[0]`
+1. `lineInfo[0]`
     * This contains `__FILE_FULL_PATH__` which is the full path (absolute) to the source file where `log()` was called
-2. `context[1]`
+2. `lineInfo[1]`
     * This contains `__FILE__` which is the path (starting at `source/` to the source file where `log()` was called
-3. `context[2]`
+3. `lineInfo[2]`
     * This contains a stringified version of `__LINE__` which is the line number of the call to `log()`
-4. `context[3]`
+4. `lineInfo[3]`
     * This contains `__MODULE__` which is the name of the module the call to `log()` appeared in
-5. `context[4]`
+5. `lineInfo[4]`
     * This contains `__FUNCTION__` which is the name of the function `log()` was called in
-6. `context[5]`
+6. `lineInfo[5]`
     * This contains `__PRETTY_FUNCTION__` which is the same as above but with type information
-7. `context[5..X]`
-    * This contains optional extras that were set when the `log()` function was called with the `contextExtras` set
-    * Example: `log("Hello world", contextExtras=[this])`
 
-#### Creating a Logger
+The point of a `Context` object is also such that a custom transformer may expect a kind-of `Context` like a custom one (i.e. `CustomContext`)
+which perhaps a custom logger (kind-of `Logger`) can then have set certain fields in it.
+
+## Creating a Logger
 
 We now need to create a logger that makes use of our message transform, we can do so by creating an instance
 of the `Logger` class and passing in our `MessageTransform` as so:
@@ -124,7 +158,7 @@ Logger customLogger = new DefaultLogger(new CustomTranform());
 
 The above is all one needs to be able to pull off a custom transformation.
 
-#### Custom Logger
+### Custom Logger
 
 Custom loggers can also be created by sub-classing the `Logger` class and overriding the `logImpl(string)` method.
 The reason someone may want to do this is up to them. One easy to think of reason is to perhaps applying filtering
@@ -136,4 +170,4 @@ of a custom logger, such as `DefaultLogger`.
 
 ## License
 
-LGPLv2
+LGPL v3
