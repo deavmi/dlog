@@ -330,7 +330,9 @@ public class Logger
 		logc(defaultContext, messageOut, c1, c2, c3, c4, c5, c6);
 	}
 
-	/* You can also call using `dbg` */
+	/** 
+	 * Alias for debug_
+	 */
 	public alias dbg = debug_;
 	
 	/** 
