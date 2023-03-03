@@ -12,7 +12,7 @@ dub add dlog
 ```
 
 * [View on DUB](https://code.dlang.org/packages/dlog)
-* [View API](https://dlog.dpldocs.info/v0.3.8/index.html)
+* [View API](https://dlog.dpldocs.info/v0.3.19/index.html)
 
 ## Components
 
