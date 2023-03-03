@@ -12,7 +12,7 @@ dub add dlog
 ```
 
 * [View on DUB](https://code.dlang.org/packages/dlog)
-* [View API](https://dlog.dpldocs.info/)
+* [View API](https://dlog.dpldocs.info/v0.3.8/index.html)
 
 ## Components
 
@@ -28,5 +28,5 @@ dlog is formed out of two main components:
 
 ## License
 
-LGPLv2
+LGPLv3
 

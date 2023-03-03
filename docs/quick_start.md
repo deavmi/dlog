@@ -69,3 +69,5 @@ This outputs the following:
 [2023-Mar-03 11:33:49.2618273]	(source/dlog/core.d:433): ["woah", "LEVELS!"] 69.42
 [2023-Mar-03 11:33:49.2618457]	(source/dlog/core.d:436): ["woah", "LEVELS!"] 69.42
 ```
+
+You can also look into `logc(Context, string)` which allows you to use a `Context` object when logging, more information available in the [full API](https://dlog.dpldocs.info/v0.3.8/dlog.context.html).
