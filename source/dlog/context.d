@@ -11,9 +11,24 @@ import std.conv : to;
  */
 public enum Level
 {
+    /** 
+     * Informative message
+     */
     INFO,
+
+    /** 
+     * Warning message
+     */
     WARN,
+
+    /** 
+     * Error message
+     */
     ERROR,
+
+    /** 
+     * Debugging message
+     */
     DEBUG
 }
 
@@ -82,11 +97,34 @@ public class Context
  */
 public struct CompilationInfo
 {
+    /**
+     * compile time usage file
+     */
     public string fullFilePath;
+
+    /** 
+     * compile time usage file (relative)
+     */
     public string file;
+
+    /** 
+     * compile time usage line number
+     */
     public ulong line;
+
+    /** 
+     * compile time usage module
+     */
     public string moduleName;
+
+    /** 
+     * compile time usage function
+     */
     public string functionName;
+
+    /**
+     * compile time usage function (pretty)
+     */
     public string prettyFunctionName;
 
     /** 
