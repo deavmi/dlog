@@ -1,3 +1,6 @@
+/** 
+ * Helper functions
+ */
 module dlog.utilities;
 
 import std.conv : to;
