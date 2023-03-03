@@ -20,7 +20,9 @@ public class Logger
 	/* Starting transformation */
 	private MessageTransform messageTransform;
 	
-	/* The multiple argument joiner */
+	/** 
+	 * The multiple argument joiner
+	 */
 	protected string multiArgJoiner;
 
 	/** 
