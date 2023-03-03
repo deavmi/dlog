@@ -37,3 +37,35 @@ This will output the following:
 
 As you can see file and line numbering of where the `log()` function is called appears in the log message which can be quite helpful
 for debugging.
+
+---
+
+We also support many different logging levels which can be accomplished using the `error`, `debug_` (or the `dbg` alias), `info `(the default) and `warn`:
+
+```d
+Logger logger = new DefaultLogger();
+
+// Create a default logger with the default joiner
+logger = new DefaultLogger();
+
+// Test out `error()`
+logger.error(["woah", "LEVELS!"], 69.420);
+
+// Test out `info()`
+logger.info(["woah", "LEVELS!"], 69.420);
+
+// Test out `warn()`
+logger.warn(["woah", "LEVELS!"], 69.420);
+
+// Test out `debug_()`
+logger.debug_(["woah", "LEVELS!"], 69.420);
+```
+
+This outputs the following:
+
+```
+[2023-Mar-03 11:33:49.2617904]	(source/dlog/core.d:427): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618091]	(source/dlog/core.d:430): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618273]	(source/dlog/core.d:433): ["woah", "LEVELS!"] 69.42
+[2023-Mar-03 11:33:49.2618457]	(source/dlog/core.d:436): ["woah", "LEVELS!"] 69.42
+```
