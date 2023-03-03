@@ -27,6 +27,9 @@ public final class DefaultLogger : Logger
 		super(multiArgJoiner);
 	}
 
+	/** 
+	 * Our logging implementation
+	 */
 	protected override void logImpl(string message)
 	{
 		import std.stdio : write;
