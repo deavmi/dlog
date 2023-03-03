@@ -1,5 +1,5 @@
 /**
-* Includes defaults such as the DefaultLogger
+* Default logger
 */
 module dlog.defaults;
 
@@ -15,6 +15,12 @@ import std.conv : to;
 */
 public final class DefaultLogger : Logger
 {
+	/** 
+	 * Constructs a new default logger
+	 *
+	 * Params:
+	 *   multiArgJoiner = the joiner to use
+	 */
 	this(string multiArgJoiner = " ")
 	{
 		/* Use the DefaultTransform */	
