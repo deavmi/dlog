@@ -1,3 +1,6 @@
+/** 
+ * Transformations
+ */
 module dlog.transform;
 
 import dlog.context : Context;

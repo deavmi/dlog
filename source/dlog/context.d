@@ -1,8 +1,14 @@
+/** 
+ * Context for logging
+ */
+
 module dlog.context;
 
 import std.conv : to;
 
-
+/** 
+ * Debugging trace level
+ */
 public enum Level
 {
     INFO,
@@ -19,26 +25,52 @@ public class Context
     private CompilationInfo lineInfo;
     private Level level;
 
+    /** 
+     * Constructs a new Context
+     */
     this()
     {
 
     }
 
+    /** 
+     * Set the line information
+     *
+     * Params:
+     *   lineInfo = the CompilationInfo struct to use
+     */
     public final void setLineInfo(CompilationInfo lineInfo)
     {
         this.lineInfo = lineInfo;
     }
 
+    /** 
+     * Obtain the line information generated at compilation
+     * time
+     *
+     * Returns: the CompilationInfo struct
+     */
     public final CompilationInfo getLineInfo()
     {
         return lineInfo;
     }
 
+    /** 
+     * Returns the current tarce level
+     *
+     * Returns: the Level
+     */
     public final Level getLevel()
     {
         return level;
     }
 
+    /** 
+     * Set the trace level
+     *
+     * Params:
+     *   level = the Level to use
+     */
     public final void setLevel(Level level)
     {
         this.level = level;
