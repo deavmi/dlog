@@ -14,7 +14,7 @@ import dlog;
 
 public class CustomTranform : MessageTransform
 {
-	public override string transform(string text, string[] context)
+	public override string transform(string text, Context context)
 	{
 		string transformed;
 
@@ -25,24 +25,24 @@ public class CustomTranform : MessageTransform
 }
 ```
 
-Additional information, besides the text being logged itself (this is the `string text` argument), comes in the form of a string array as `string[] context`
-the contents of which are described below:
+Additional information, besides the text being logged itself (this is the `string text` argument), comes in the form of a `Context` object `context`. What one can get from this is a `CompilationInfo` struct which contains the following fields below if one calls `toArray()` on
+it which will return a string array shown below (we refer to this array as `lineInfo`):
 
-1. `context[0]`
+1. `lineInfo[0]`
     * This contains `__FILE_FULL_PATH__` which is the full path (absolute) to the source file where `log()` was called
-2. `context[1]`
+2. `lineInfo[1]`
     * This contains `__FILE__` which is the path (starting at `source/` to the source file where `log()` was called
-3. `context[2]`
+3. `lineInfo[2]`
     * This contains a stringified version of `__LINE__` which is the line number of the call to `log()`
-4. `context[3]`
+4. `lineInfo[3]`
     * This contains `__MODULE__` which is the name of the module the call to `log()` appeared in
-5. `context[4]`
+5. `lineInfo[4]`
     * This contains `__FUNCTION__` which is the name of the function `log()` was called in
-6. `context[5]`
+6. `lineInfo[5]`
     * This contains `__PRETTY_FUNCTION__` which is the same as above but with type information
-7. `context[5..X]`
-    * This contains optional extras that were set when the `log()` function was called with the `contextExtras` set
-    * Example: `log("Hello world", contextExtras=[this])`
+
+The point of a `Context` object is also such that a custom transformer may expect a kind-of `Context` like a custom one (i.e. `CustomContext`)
+which perhaps a custom logger (kind-of `Logger`) can then have set certain fields in it.
 
 ## Creating a Logger
 
