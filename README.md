@@ -17,6 +17,8 @@
 `[2021-Dec-23 11:17:35.3527637]	(source/dlog/testing/thing.d:12): This is a log message`
 
 ---
+    
+[![D](https://github.com/deavmi/dlog/actions/workflows/d.yml/badge.svg)](https://github.com/deavmi/dlog/actions/workflows/d.yml)
 
 ## Usage
 
