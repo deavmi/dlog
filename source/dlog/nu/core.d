@@ -72,6 +72,58 @@ public abstract class Logger
         this.transforms.linearRemoveElement(transform);
     }
 
+    // TODO: Handle duplicate?
+    public final void addFilter(Filter filter)
+    {
+        scope(exit)
+        {
+            this.lock.unlock();
+        }
+
+        this.lock.lock();
+
+        this.filters.insertAfter(this.filters[], filter);
+    }
+
+    // TODO: Hanmdle not found explicitly?
+    public final void removeFilter(Filter filter)
+    {
+        scope(exit)
+        {
+            this.lock.unlock();
+        }
+
+        this.lock.lock();
+
+        this.filters.linearRemoveElement(filter);
+    }
+
+    // TODO: Handle duplicate?
+    public final void addHandler(Handler handler)
+    {
+        scope(exit)
+        {
+            this.lock.unlock();
+        }
+
+        this.lock.lock();
+
+        this.handlers.insertAfter(this.handlers[], handler);
+    }
+
+    // TODO: Hanmdle not found explicitly?
+    public final void removeHandler(Handler handler)
+    {
+        scope(exit)
+        {
+            this.lock.unlock();
+        }
+
+        this.lock.lock();
+
+        this.handlers.linearRemoveElement(handler);
+    }
+
     // Logs an actual message
     //
     // This first passes it over all filters
