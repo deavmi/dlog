@@ -239,12 +239,3 @@ public class BasicLogger : Logger
         return this.level;
     }
 }
-
-public class ConsoleLogger : BasicLogger
-{
-    this()
-    {
-        import std.stdio;
-        addHandler(new FileHandler(stdout));
-    }
-}
