@@ -57,13 +57,13 @@ public enum Level
     DEBUG
 }
 
-public class LevelFilter : Filter
+private class LevelFilter : Filter
 {
-    private Level curLevel;
+    private Level* level;
 
-    this()
+    this(Level* level)
     {
-
+        this.level = level;
     }
 
     public bool filter(Message message)
@@ -72,7 +72,7 @@ public class LevelFilter : Filter
         BasicMessage bmesg = cast(BasicMessage)message;
         if(bmesg)
         {
-            return bmesg.getLevel() <= this.curLevel;
+            return bmesg.getLevel() <= *this.level;
         }
 
         return false;
@@ -85,6 +85,14 @@ public class BasicLogger : Logger
 
     this()
     {
+        // Attach a new level-filter
+        // with access to our current
+        // level
+        addFilter(new LevelFilter(&level));
+    }
 
+    public final void setLevel(Level level)
+    {
+        this.level = level;
     }
 }
