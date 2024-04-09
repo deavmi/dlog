@@ -96,3 +96,12 @@ public class BasicLogger : Logger
         this.level = level;
     }
 }
+
+public class ConsoleLogger : BasicLogger
+{
+    this()
+    {
+        import std.stdio;
+        addHandler(new FileHandler(stdout));
+    }
+}
