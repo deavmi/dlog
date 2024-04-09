@@ -5,11 +5,22 @@ import dlog.nu.core;
 public class BasicMessage : Message
 {
     private string text;
-    private Context ctx; 
+    private Level level;
+
+    this(string text, Level level = Level.INFO)
+    {
+        this.text = text;
+        this.level = level;
+    }
 
     public string getText()
     {
         return this.text;
+    }
+
+    public Level getLevel()
+    {
+        return this.level;
     }
 }
 
@@ -35,5 +46,45 @@ public class FileHandler : Handler
         {
             file.writeln(bmesg.getText());
         }
+    }
+}
+
+public enum Level
+{
+    ERROR,
+    WARNING,
+    INFO,
+    DEBUG
+}
+
+public class LevelFilter : Filter
+{
+    private Level curLevel;
+
+    this()
+    {
+
+    }
+
+    public bool filter(Message message)
+    {
+        // Only handle BasicMessage(s)
+        BasicMessage bmesg = cast(BasicMessage)message;
+        if(bmesg)
+        {
+            return bmesg.getLevel() <= this.curLevel;
+        }
+
+        return false;
+    }
+}
+
+public class BasicLogger : Logger
+{
+    private Level level;
+
+    this()
+    {
+
     }
 }
