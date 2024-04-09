@@ -99,15 +99,39 @@ public class BasicMessage : Message
     }
 }
 
+/** 
+ * A file-based handler which
+ * writes `BasicMessage`(s)
+ * to a provided file
+ */
 public class FileHandler : Handler
 {
-    
+    /** 
+     * File to write to
+     */
     private File file;
+
+    /** 
+     * Constrtucts a new
+     * `FileHandler` with
+     * the given file
+     *
+     * Params:
+     *   file = the file
+     */
     this(File file)
     {
         this.file = file;
     }
 
+    /** 
+     * Handles the message, does a
+     * no-op if the message is
+     * not a kind-of `BasicMessage`
+     *
+     * Params:
+     *   message = the message
+     */
     public void handle(Message message)
     {
         // Only handle BasicMessage(s)
@@ -145,15 +169,41 @@ public enum Level
     DEBUG
 }
 
+/** 
+ * A level-based filter which
+ * has a predicate which operates
+ * on the value of a pointed-to
+ * `Level` variable
+ */
 private class LevelFilter : Filter
 {
+    /** 
+     * Address of the level var
+     */
     private Level* level;
 
+    /** 
+     * Constructs a new `LevelFilter`
+     * with the given `Level*`
+     *
+     * Params:
+     *   level = the level address
+     */
     this(Level* level)
     {
         this.level = level;
     }
 
+    /** 
+     * Filters the given message according
+     * to the current level. This will no-op
+     * and always return `true` if the message
+     * is not a kind-of `BasicMessage`
+     *
+     * Params:
+     *   message = the message
+     * Returns: the verdict
+     */
     public bool filter(Message message)
     {
         // Only handle BasicMessage(s)
