@@ -67,6 +67,11 @@ public interface Handler
     public void handle(Message message);
 }
 
+/** 
+ * Defines the base logger
+ * and functionality associated
+ * with it
+ */
 public abstract class Logger
 {
     private SList!(Transform) transforms;
@@ -74,12 +79,22 @@ public abstract class Logger
     private SList!(Handler) handlers;
     private Mutex lock; // Lock for attached handlers, filters and transforms
 
+    /** 
+     * Constructs a new logger
+     */
     this()
     {
         this.lock = new Mutex();
     }
 
     // TODO: Handle duplicate?
+    /** 
+     * Adds the given transform
+     *
+     * Params:
+     *   transform = the transform
+     * to add
+     */
     public final void addTransform(Transform transform)
     {
         scope(exit)
@@ -93,6 +108,13 @@ public abstract class Logger
     }
 
     // TODO: Hanmdle not found explicitly?
+    /** 
+     * Removes the given transform
+     *
+     * Params:
+     *   transform = the transform
+     * to remove
+     */
     public final void removeTransform(Transform transform)
     {
         scope(exit)
@@ -106,6 +128,14 @@ public abstract class Logger
     }
 
     // TODO: Handle duplicate?
+
+    /** 
+     * Adds the given filter
+     *
+     * Params:
+     *   filter = the filter
+     * to add
+     */
     public final void addFilter(Filter filter)
     {
         scope(exit)
@@ -119,6 +149,14 @@ public abstract class Logger
     }
 
     // TODO: Hanmdle not found explicitly?
+
+    /** 
+     * Removes the given filter
+     *
+     * Params:
+     *   filter = the filter
+     * to remove
+     */
     public final void removeFilter(Filter filter)
     {
         scope(exit)
@@ -132,6 +170,14 @@ public abstract class Logger
     }
 
     // TODO: Handle duplicate?
+
+    /** 
+     * Adds the given handler
+     *
+     * Params:
+     *   handler = the handler
+     * to add
+     */
     public final void addHandler(Handler handler)
     {
         scope(exit)
@@ -145,6 +191,14 @@ public abstract class Logger
     }
 
     // TODO: Hanmdle not found explicitly?
+
+    /** 
+     * Removes the given handler
+     *
+     * Params:
+     *   handler = the handler
+     * to remove
+     */
     public final void removeHandler(Handler handler)
     {
         scope(exit)
@@ -157,11 +211,17 @@ public abstract class Logger
         this.handlers.linearRemoveElement(handler);
     }
 
-    // Logs an actual message
-    //
-    // This first passes it over all filters
-    // then to a transform and then copies
-    // to each handler
+    /** 
+     * Logs the provided message by processing
+     * it through all the filters, and if
+     * the verdict is `true` then transforms
+     * the message via all transformers
+     * and finally dispatches said message
+     * to all attached handlers
+     *
+     * Params:
+     *   message = the message
+     */
     public final void log(Message message)
     {
         scope(exit)
