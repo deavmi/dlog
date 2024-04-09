@@ -95,6 +95,11 @@ public class BasicLogger : Logger
     {
         this.level = level;
     }
+
+    public final Level getLevel()
+    {
+        return this.level;
+    }
 }
 
 public class ConsoleLogger : BasicLogger
