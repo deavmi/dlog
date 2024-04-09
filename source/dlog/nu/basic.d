@@ -13,6 +13,16 @@ public class BasicMessage : Message
         this.level = level;
     }
 
+    this()
+    {
+
+    }
+
+    public void setText(string text)
+    {
+        this.text = text;
+    }
+
     public string getText()
     {
         return this.text;
