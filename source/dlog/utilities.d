@@ -1,5 +1,7 @@
 /** 
  * Helper functions
+ *
+ * Authors: Tristan Brice Velloza Kildaire (deavmi)
  */
 module dlog.utilities;
 

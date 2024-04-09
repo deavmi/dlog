@@ -1,3 +1,12 @@
+/** 
+ * Defines some basic message
+ * types, filters and handlers
+ * that may be of use in
+ * some combination or
+ * seperate
+ *
+ * Authors: Tristan Brice Velloza Kildaire (deavmi)
+ */
 module dlog.basic;
 
 import dlog.core;
@@ -37,11 +46,6 @@ public class BasicMessage : Message
     {
         this.level = level;
     }
-}
-
-public class Context
-{
-
 }
 
 public class FileHandler : Handler

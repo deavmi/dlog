@@ -1,6 +1,8 @@
 /**
-* Default logger
-*/
+ * Default logger
+ *
+ * Authors: Tristan Brice Velloza Kildaire (deavmi)
+ */
 module dlog.defaults;
 
 import dlog.core;

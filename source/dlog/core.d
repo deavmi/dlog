@@ -1,3 +1,8 @@
+/** 
+ * Core logging services
+ *
+ * Authors: Tristan Brice Velloza Kildaire (deavmi)
+ */
 module dlog.core;
 
 public class Message
