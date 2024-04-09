@@ -11,12 +11,12 @@ public import dlog.core;
 /**
 * Transformations
 */
-public import dlog.transform;
+// public import dlog.transform;
 
 /**
 * Context for logging
 */
-public import dlog.context;
+// public import dlog.context;
 
 /**
 * Default logger

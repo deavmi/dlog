@@ -1,6 +1,6 @@
-module dlog.nu.basic;
+module dlog.basic;
 
-import dlog.nu.core;
+import dlog.core;
 
 public class BasicMessage : Message
 {
@@ -64,11 +64,29 @@ public class FileHandler : Handler
     }
 }
 
+/** 
+ * Logging level
+ */
 public enum Level
 {
+    /** 
+     * Error message
+     */
     ERROR,
-    WARNING,
+
+    /** 
+     * Informative message
+     */
     INFO,
+
+    /** 
+     * Warning message
+     */
+    WARN,
+
+    /** 
+     * Debugging message
+     */
     DEBUG
 }
 
