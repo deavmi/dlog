@@ -6,7 +6,7 @@
 module dlog.defaults;
 
 import dlog.core;
-import dlog.basic : BasicMessage, FileHandler, Level;
+import dlog.basic : BasicMessage, FileHandler, Level, BasicLogger;
 import std.stdio : stdout;
 import std.conv : to;
 import dlog.utilities : flatten;
@@ -21,7 +21,7 @@ import std.datetime.systime : Clock, SysTime;
 * message transformation and supports
 * the basic levels of logging.
 */
-public final class DefaultLogger : Logger
+public final class DefaultLogger : BasicLogger
 {
 	/** 
 	 * The joiner for multi-argument
@@ -188,6 +188,9 @@ unittest
 {
 	DefaultLogger logger = new DefaultLogger();
 
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+
 	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
 
 	
@@ -202,6 +205,10 @@ unittest
 
 	// Same as above but with a custom joiner set
 	logger = new DefaultLogger("(-)");
+
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+
 	logger.info(testParameters);
 
 	writeln();
@@ -212,10 +219,13 @@ unittest
  */
 unittest
 {
+	// Create a default logger with the default joiner
 	DefaultLogger logger = new DefaultLogger();
 
-	// Create a default logger with the default joiner
-	logger = new DefaultLogger();
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+	
+	// Log some stuff
 	logger.info(["a", "b", "c", "d"], [1, 2], true);
 
 	writeln();
@@ -227,10 +237,11 @@ unittest
  */
 unittest
 {
+	// Create a default logger with the default joiner
 	DefaultLogger logger = new DefaultLogger();
 
-	// Create a default logger with the default joiner
-	logger = new DefaultLogger();
+	// Set logging level to at least DEBUG
+	logger.setLevel(Level.DEBUG);
 
 	// Test out `error()`
 	logger.error(["woah", "LEVELS!"], 69.420);
@@ -243,6 +254,10 @@ unittest
 
 	// Test out `debug_()`
 	logger.debug_(["woah", "LEVELS!"], 69.420);
+
+	// Should not be able to see this
+	logger.setLevel(Level.INFO);
+	logger.debug_("Can't see me!");
 
 	writeln();
 }
