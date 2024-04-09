@@ -9,11 +9,15 @@ import std.stdio : stdout;
 import std.conv : to;
 import dlog.utilities : flatten;
 import std.array :join;
+import std.datetime.systime : Clock, SysTime;
 
 /**
 * DefaultLogger
 *
-* The default logger logs to standard output (fd 0)
+* The default logger logs using
+* a pretty stock-standard (non-colored)
+* message transformation and supports
+* the basic levels of logging.
 */
 public final class DefaultLogger : Logger
 {
@@ -125,16 +129,19 @@ public final class DefaultLogger : Logger
  *
  * Provides a transformation of the kind
  *
- * [date+time] (srcFile:lineNumber): message `\n`
+ * [date+time] (level): message `\n`
  */
-public final class DefaultTransform : Transform
+private final class DefaultTransform : Transform
 {
 	/** 
-	 * Performs the default transformation
+	 * Performs the default transformation.
+	 * If the message is not a `BasicMessage`
+	 * then no transformation occurs.
+	 *
+	 * Params:
+	 *   message = the message to transform
+	 * Returns: the transformed message
 	 */
-
-
-
 	public Message transform(Message message)
 	{
 		// Only handle BasicMessage(s)
@@ -147,9 +154,7 @@ public final class DefaultTransform : Transform
 		string text;
 
 		/* Date and time */
-		import std.datetime.systime : Clock, SysTime;
 		SysTime currTime = Clock.currTime();
-		import std.conv : to;
 		string timestamp = to!(string)(currTime);
 		text = "["~timestamp~"]";
 
