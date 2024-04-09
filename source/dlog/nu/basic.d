@@ -32,6 +32,11 @@ public class BasicMessage : Message
     {
         return this.level;
     }
+
+    public void setLevel(Level level)
+    {
+        this.level = level;
+    }
 }
 
 public class Context
@@ -54,7 +59,7 @@ public class FileHandler : Handler
         BasicMessage bmesg = cast(BasicMessage)message;
         if(bmesg)
         {
-            file.writeln(bmesg.getText());
+            file.write(bmesg.getText());
         }
     }
 }
