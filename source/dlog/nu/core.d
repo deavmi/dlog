@@ -24,16 +24,6 @@ import std.container.slist : SList;
 // import std.range : in;
 import core.sync.mutex : Mutex;
 
-// private mixin template Ting(Mutex lock)
-// {
-//     scope(exit)
-//         {
-//             lock.unlock();
-//         }
-
-//         lock.lock();
-// }
-
 public abstract class Logger
 {
     private SList!(Transform) transforms;
