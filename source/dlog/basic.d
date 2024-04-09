@@ -213,7 +213,7 @@ private class LevelFilter : Filter
             return bmesg.getLevel() <= *this.level;
         }
 
-        return false;
+        return true;
     }
 }
 
