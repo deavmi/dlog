@@ -10,38 +10,89 @@
 module dlog.basic;
 
 import dlog.core;
+import std.stdio : File;
 
+/** 
+ * Represents a basic message
+ * with log level information
+ * associated with it as well
+ * as text
+ */
 public class BasicMessage : Message
 {
+    /** 
+     * The text message
+     */
     private string text;
+
+    /** 
+     * Log level
+     */
     private Level level;
 
+    /** 
+     * Constructs a new `BasicMessage`
+     * with the given text and log level
+     *
+     * Params:
+     *   text = the message text
+     *   level = the log level (default
+     * is `Level.INFO`)
+     */
     this(string text, Level level = Level.INFO)
     {
         this.text = text;
         this.level = level;
     }
 
+    /** 
+     * Constructs an empty message
+     * with the highest log level
+     * (least verbose)
+     */
     this()
     {
 
     }
 
+    /** 
+     * Sets the text
+     *
+     * Params:
+     *   text = the message's
+     * text
+     */
     public void setText(string text)
     {
         this.text = text;
     }
 
+    /** 
+     * Returns the text
+     *
+     * Returns: the text
+     */
     public string getText()
     {
         return this.text;
     }
 
+    /** 
+     * Returns the log level
+     *
+     * Returns: the level
+     */
     public Level getLevel()
     {
         return this.level;
     }
 
+    /** 
+     * Sets the log level
+     *
+     * Params:
+     *   level = the level
+     */
     public void setLevel(Level level)
     {
         this.level = level;
@@ -50,7 +101,7 @@ public class BasicMessage : Message
 
 public class FileHandler : Handler
 {
-    import std.stdio : File;
+    
     private File file;
     this(File file)
     {
