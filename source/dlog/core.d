@@ -5,29 +5,67 @@
  */
 module dlog.core;
 
-public class Message
+import std.container.slist : SList;
+import core.sync.mutex : Mutex;
+
+/** 
+ * The base message type
+ */
+public abstract class Message
 {
 
 }
 
+/** 
+ * Defines the filtering
+ * interface
+ */
 public interface Filter
 {
+    /** 
+     * Filters the given message
+     * returning a verdict
+     * based on it
+     *
+     * Params:
+     *   message = the message
+     * Returns: the verdct
+     */
     public bool filter(Message message);
 }
 
+/** 
+ * Defines the message
+ * transformation interface
+ */
 public interface Transform
 {
+    /** 
+     * Transforms the given message
+     *
+     * Params:
+     *   message = the message input
+     * Returns: the transformed
+     * message
+     */
     public Message transform(Message message);
 }
 
+/** 
+ * Defines the interface
+ * for handling messages
+ */
 public interface Handler
 {
+    /** 
+     * Handles the given message
+     *
+     * Params:
+     *   message = the message to
+     * handle
+     */
     public void handle(Message message);
 }
-
-import std.container.slist : SList;
-// import std.range : in;
-import core.sync.mutex : Mutex;
 
 public abstract class Logger
 {
