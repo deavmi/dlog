@@ -10,7 +10,7 @@ public interface Filter
     public bool filter(Message message);
 }
 
-public interface MessageTransform
+public interface Transform
 {
     public Message transform(Message message);
 }
@@ -36,7 +36,7 @@ import core.sync.mutex : Mutex;
 
 public abstract class Logger
 {
-    private SList!(MessageTransform) transforms;
+    private SList!(Transform) transforms;
     private SList!(Filter) filters;
     private SList!(Handler) handlers;
     private Mutex lock; // Lock for attached handlers, filters and transforms
@@ -47,7 +47,7 @@ public abstract class Logger
     }
 
     // TODO: Handle duplicate?
-    public final void addTransform(MessageTransform transform)
+    public final void addTransform(Transform transform)
     {
         scope(exit)
         {
@@ -60,7 +60,7 @@ public abstract class Logger
     }
 
     // TODO: Hanmdle not found explicitly?
-    public final void removeTransform(MessageTransform transform)
+    public final void removeTransform(Transform transform)
     {
         scope(exit)
         {
@@ -70,5 +70,39 @@ public abstract class Logger
         this.lock.lock();
 
         this.transforms.linearRemoveElement(transform);
+    }
+
+    // Logs an actual message
+    //
+    // This first passes it over all filters
+    // then to a transform and then copies
+    // to each handler
+    public final void log(Message message)
+    {
+        scope(exit)
+        {
+            this.lock.unlock();
+        }
+
+        this.lock.lock();
+
+        foreach(Filter filter; this.filters)
+        {
+            if(!filter.filter(message))
+            {
+                return;
+            }
+        }
+
+        Message curMessage = message;
+        foreach(Transform transform; this.transforms)
+        {
+            curMessage = transform.transform(curMessage);
+        }
+
+        foreach(Handler handler; this.handlers)
+        {
+            handler.handle(curMessage);
+        }
     }
 }
