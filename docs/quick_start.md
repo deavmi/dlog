@@ -11,63 +11,32 @@ dub add dlog
 
 ### Start logging
 
-If you want to immediately begin logging text usin the defaults and don't care about implementing your own transformations then you can 
+If you want to immediately begin logging text using the defaults and don't care about implementing your own transformations then you can 
 simply use the default logger as follows:
 
 ```d
 import dlog;
 
-Logger logger = new DefaultLogger();
+DefaultLogger logger = new DefaultLogger();
 
+logger.setLevel(Level.DEBUG);
+logger.error(["woah", "LEVELS!"], 69.420);
+logger.info(["woah", "LEVELS!"], 69.420);
+logger.warn(["woah", "LEVELS!"], 69.420);
+logger.debug_(["woah", "LEVELS!"], 69.420);
 
-logger.log("This is a log message");
-logger.log(1);
-logger.log(1==1);
-logger.log([1,2,3]);
+// Should not be able to see this
+logger.setLevel(Level.INFO);
+logger.debug_("Can't see me!");
 ```
 
 This will output the following:
 
 ```
-[2021-Dec-23 11:17:35.3527637]	(source/dlog/testing/thing.d:12): This is a log message
-[2021-Dec-23 11:17:35.3527717]	(source/dlog/testing/thing.d:13): 1
-[2021-Dec-23 11:17:35.3527789]	(source/dlog/testing/thing.d:14): true
-[2021-Dec-23 11:17:35.3527871]	(source/dlog/testing/thing.d:15): [1, 2, 3]
+[2024-Apr-09 19:14:38.3077171]  (ERROR): ["woah", "LEVELS!"] 69.42
+[2024-Apr-09 19:14:38.3077346]  (INFO): ["woah", "LEVELS!"] 69.42
+[2024-Apr-09 19:14:38.3077559]  (WARN): ["woah", "LEVELS!"] 69.42
+[2024-Apr-09 19:14:38.3077759]  (DEBUG): ["woah", "LEVELS!"] 69.42
 ```
 
-As you can see file and line numbering of where the `log()` function is called appears in the log message which can be quite helpful
-for debugging.
-
----
-
-We also support many different logging levels which can be accomplished using the `error`, `debug_` (or the `dbg` alias), `info `(the default) and `warn`:
-
-```d
-Logger logger = new DefaultLogger();
-
-// Create a default logger with the default joiner
-logger = new DefaultLogger();
-
-// Test out `error()`
-logger.error(["woah", "LEVELS!"], 69.420);
-
-// Test out `info()`
-logger.info(["woah", "LEVELS!"], 69.420);
-
-// Test out `warn()`
-logger.warn(["woah", "LEVELS!"], 69.420);
-
-// Test out `debug_()`
-logger.debug_(["woah", "LEVELS!"], 69.420);
-```
-
-This outputs the following:
-
-```
-[2023-Mar-03 11:33:49.2617904]	(source/dlog/core.d:427): ["woah", "LEVELS!"] 69.42
-[2023-Mar-03 11:33:49.2618091]	(source/dlog/core.d:430): ["woah", "LEVELS!"] 69.42
-[2023-Mar-03 11:33:49.2618273]	(source/dlog/core.d:433): ["woah", "LEVELS!"] 69.42
-[2023-Mar-03 11:33:49.2618457]	(source/dlog/core.d:436): ["woah", "LEVELS!"] 69.42
-```
-
-You can also look into `logc(Context, string)` which allows you to use a `Context` object when logging, more information available in the [full API](https://dlog.dpldocs.info/v0.3.19/dlog.context.html).
+You can see the [full API](https://dlog.dpldocs.info/) for more information.
