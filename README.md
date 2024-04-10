@@ -29,7 +29,7 @@ dub add dlog
 ```
 
 * [View on DUB](https://code.dlang.org/packages/dlog)
-* [View API](https://dlog.dpldocs.info/v0.3.19/index.html)
+* [View API](https://dlog.dpldocs.info/)
 
 ### Components
 
@@ -49,7 +49,7 @@ dlog is formed out of two main components:
 
 ### Quick start
 
-If you want to immediately begin logging text usin the defaults and don't care about implementing your own transformations then you can 
+If you want to immediately begin logging text using the defaults and don't care about implementing your own transformations then you can 
 simply use the default logger as follows:
 
 ```d
@@ -77,7 +77,7 @@ This will output the following:
 [2024-Apr-09 19:14:38.3077759]  (DEBUG): ["woah", "LEVELS!"] 69.42
 ```
 
-You can see the [full API](https://dlog.dpldocs.info/v0.3.19/dlog.context.html) for more information.
+You can see the [full API](https://dlog.dpldocs.info/) for more information.
 
 ### Custom loggers
 
@@ -92,7 +92,7 @@ You will need to start off with a class that inherits from the `Transform` class
 ```d
 import dlog;
 
-public class CustomTranform : Transform
+public class CustomTransform : Transform
 {
 	public override Message transform(Message message)
 	{
