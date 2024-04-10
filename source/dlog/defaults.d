@@ -1,20 +1,34 @@
 /**
-* Default logger
-*/
+ * Default logger
+ *
+ * Authors: Tristan Brice Velloza Kildaire (deavmi)
+ */
 module dlog.defaults;
 
-import dlog.core : Logger;
-import dlog.transform : MessageTransform;
-import dlog.context : Context, CompilationInfo;
+import dlog.core;
+import dlog.basic : BasicMessage, FileHandler, Level, BasicLogger;
+import std.stdio : stdout;
 import std.conv : to;
+import dlog.utilities : flatten;
+import std.array :join;
+import std.datetime.systime : Clock, SysTime;
 
 /**
 * DefaultLogger
 *
-* The default logger logs to standard output (fd 0)
+* The default logger logs using
+* a pretty stock-standard (non-colored)
+* message transformation and supports
+* the basic levels of logging.
 */
-public final class DefaultLogger : Logger
+public final class DefaultLogger : BasicLogger
 {
+	/** 
+	 * The joiner for multi-argument
+	 * log messages
+	 */
+	private string multiArgJoiner;
+
 	/** 
 	 * Constructs a new default logger
 	 *
@@ -23,18 +37,93 @@ public final class DefaultLogger : Logger
 	 */
 	this(string multiArgJoiner = " ")
 	{
-		/* Use the DefaultTransform */	
-		super(multiArgJoiner);
+		this.multiArgJoiner = multiArgJoiner;
+		
+		addTransform(new DefaultTransform());
+		addHandler(new FileHandler(stdout));
 	}
 
 	/** 
-	 * Our logging implementation
+	 * Logs the given message of an arbitrary amount of
+	 * arguments and specifically sets the level to ERROR
+	 *
+	 * Params:
+	 *   segments = the arbitrary argumnets (alias sequence)
 	 */
-	protected override void logImpl(string message)
+	public void error(TextType...)(TextType segments)
 	{
-		import std.stdio : write;
-		write(message);
+		doLog(segments, Level.ERROR);
 	}
+
+	/** 
+	 * Logs the given message of an arbitrary amount of
+	 * arguments and specifically sets the level to INFO
+	 *
+	 * Params:
+	 *   segments = the arbitrary argumnets (alias sequence)
+	 */
+	public void info(TextType...)(TextType segments)
+	{
+		doLog(segments, Level.INFO);
+	}
+
+	/** 
+	 * Logs the given message of an arbitrary amount of
+	 * arguments and specifically sets the level to WARN
+	 *
+	 * Params:
+	 *   segments = the arbitrary argumnets (alias sequence)
+	 */
+	public void warn(TextType...)(TextType segments)
+	{
+		doLog(segments, Level.WARN);
+	}
+
+	/** 
+	 * Logs the given message of an arbitrary amount of
+	 * arguments and specifically sets the level to DEBUG
+	 *
+	 * Params:
+	 *   segments = the arbitrary argumnets (alias sequence)
+	 */
+	public void debug_(TextType...)(TextType segments)
+	{
+		doLog(segments, Level.DEBUG);
+	}
+
+	/** 
+     * Performs the actual logging
+     * by packing up everything before
+     * sending it to the `log(Message)`
+     * method
+     *
+     * Params:
+     *   segments = the compile-time segments
+     *   level = the log level to use
+     */
+    private void doLog(TextType...)(TextType segments, Level level)
+    {
+        /* Create a new basic message */
+        BasicMessage message = new BasicMessage();
+
+        /* Set the level */
+        message.setLevel(level);
+
+        /** 
+         * Grab all compile-time arguments and make them
+         * into an array, then join them together and
+         * set that text as the message's text
+         */
+        message.setText(join(flatten(segments), multiArgJoiner));
+
+        /* Log this message */
+		log(message);
+    }
+
+	/** 
+	 * Alias for debug_
+	 */
+	public alias dbg = debug_;
 }
 
 /**
@@ -42,40 +131,133 @@ public final class DefaultLogger : Logger
  *
  * Provides a transformation of the kind
  *
- * [date+time] (srcFile:lineNumber): message `\n`
+ * [date+time] (level): message `\n`
  */
-public final class DefaultTransform : MessageTransform
+private final class DefaultTransform : Transform
 {
 	/** 
-	 * Performs the default transformation
+	 * Performs the default transformation.
+	 * If the message is not a `BasicMessage`
+	 * then no transformation occurs.
 	 *
 	 * Params:
-	 *   text = text input to transform
-	 *   context = the context (if any)
-	 * Returns: the transformed text
+	 *   message = the message to transform
+	 * Returns: the transformed message
 	 */
-	public override string transform(string text, Context ctx)
+	public Message transform(Message message)
 	{
-		/* Extract the context */
-		string[] context = ctx.getLineInfo().toArray();
+		// Only handle BasicMessage(s)
+		BasicMessage bmesg = cast(BasicMessage)message;
+		if(bmesg is null)
+		{
+			return message;
+		}
 
-		string message;
+		string text;
 
 		/* Date and time */
-		import std.datetime.systime : Clock, SysTime;
 		SysTime currTime = Clock.currTime();
-		import std.conv : to;
 		string timestamp = to!(string)(currTime);
-		message = "["~timestamp~"]";
+		text = "["~timestamp~"]";
 
-		/* Module information */
-		message = message ~ "\t(";
-		message = message ~ context[1]~":"~context[2];
-		message = message ~ "): "~text;
+		/* Level */
+		text = text ~ "\t(";
+		text = text ~ to!(string)(bmesg.getLevel());
+		text = text ~ "): "~bmesg.getText();
 
 		/* Add trailing newline */
-		message = message ~ '\n';
+		text = text ~ '\n';
 		
+		/* Store the updated text */
+		bmesg.setText(text);
+
 		return message;
 	}
+}
+
+version(unittest)
+{
+	import std.meta : AliasSeq;
+	import std.stdio : writeln;
+}
+
+/**
+* Tests the DefaultLogger
+*/
+unittest
+{
+	DefaultLogger logger = new DefaultLogger();
+
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+
+	alias testParameters = AliasSeq!("This is a log message", 1.1, true, [1,2,3], 'f', logger);
+
+	
+	// Test various types one-by-one
+	static foreach(testParameter; testParameters)
+	{
+		logger.info(testParameter);
+	}
+
+	// Test various parameters (of various types) all at once
+	logger.info(testParameters);
+
+	// Same as above but with a custom joiner set
+	logger = new DefaultLogger("(-)");
+
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+
+	logger.info(testParameters);
+
+	writeln();
+}
+
+/**
+ * Printing out some mixed data-types, also using a DEFAULT context 
+ */
+unittest
+{
+	// Create a default logger with the default joiner
+	DefaultLogger logger = new DefaultLogger();
+
+	// Set logging level to at least INFO
+	logger.setLevel(Level.INFO);
+	
+	// Log some stuff
+	logger.info(["a", "b", "c", "d"], [1, 2], true);
+
+	writeln();
+}
+
+/**
+ * Printing out some mixed data-types, also using a DEFAULT context
+ * but also testing out the `error()`, `warn()`, `info()` and `debug()`
+ */
+unittest
+{
+	// Create a default logger with the default joiner
+	DefaultLogger logger = new DefaultLogger();
+
+	// Set logging level to at least DEBUG
+	logger.setLevel(Level.DEBUG);
+
+	// Test out `error()`
+	logger.error(["woah", "LEVELS!"], 69.420);
+
+	// Test out `info()`
+	logger.info(["woah", "LEVELS!"], 69.420);
+
+	// Test out `warn()`
+	logger.warn(["woah", "LEVELS!"], 69.420);
+
+	// Test out `debug_()`
+	logger.debug_(["woah", "LEVELS!"], 69.420);
+
+	// Should not be able to see this
+	logger.setLevel(Level.INFO);
+	logger.debug_("Can't see me!");
+
+	writeln();
 }
