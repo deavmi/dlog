@@ -217,10 +217,20 @@ private class LevelFilter : Filter
     }
 }
 
+/** 
+ * A basic logger which has support
+ * for log levels
+ */
 public class BasicLogger : Logger
 {
+    /** 
+     * The current log level
+     */
     private Level level;
 
+    /** 
+     * Constructs a new `BasicLogger`
+     */
     this()
     {
         // Attach a new level-filter
@@ -229,11 +239,24 @@ public class BasicLogger : Logger
         addFilter(new LevelFilter(&level));
     }
 
+    /** 
+     * Sets the log level
+     *
+     * Params:
+     *   level = the new
+     * level
+     */
     public final void setLevel(Level level)
     {
         this.level = level;
     }
 
+    /** 
+     * Obtains the current log
+     * level
+     *
+     * Returns: the current level
+     */
     public final Level getLevel()
     {
         return this.level;
