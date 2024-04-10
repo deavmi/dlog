@@ -12,7 +12,7 @@ You will need to start off with a class that inherits from the `Transform` class
 ```d
 import dlog;
 
-public class CustomTranform : Transform
+public class CustomTransform : Transform
 {
 	public override Message transform(Message message)
 	{
