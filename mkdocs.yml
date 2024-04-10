@@ -5,7 +5,6 @@ nav:
   - Home: index.md
   - Quick Start: quick_start.md
   - Customizations:
-    - Custom Loggers: custom_loggers.md
     - Custom Transforms: custom_transforms.md
 
 extra:
