@@ -154,14 +154,14 @@ public enum Level
     ERROR,
 
     /** 
-     * Informative message
-     */
-    INFO,
-
-    /** 
      * Warning message
      */
     WARN,
+
+    /** 
+     * Informative message
+     */
+    INFO,
 
     /** 
      * Debugging message
